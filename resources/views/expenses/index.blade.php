@@ -95,12 +95,15 @@
                                     <td style="padding:1rem 1.5rem;text-align:right;font-weight:700;color:var(--text-primary);font-size:1rem;">
                                         {{ number_format($expense->amount, 2) }} €
                                     </td>
-                                    <td style="padding:1rem 1.5rem;text-align:right;">
+                                    <td style="padding:1rem 1.5rem;text-align:right;display:flex;justify-content:flex-end;gap:0.5rem;">
                                         @if($expense->payer_id === $user->id || $isOwner)
+                                        <a href="{{ route('colocations.expenses.edit', [$colocation, $expense]) }}" style="color:var(--text-muted);cursor:pointer;padding:0.25rem;display:flex;align-items:center;">
+                                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        </a>
                                         <form method="POST" action="{{ route('colocations.expenses.destroy', [$colocation, $expense]) }}" onsubmit="return confirm('Remove this expense?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" style="background:none;border:none;color:var(--danger);cursor:pointer;padding:0.25rem;">
+                                            <button type="submit" style="background:none;border:none;color:var(--danger);cursor:pointer;padding:0.25rem;display:flex;align-items:center;">
                                                 <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                             </button>
                                         </form>
@@ -159,13 +162,35 @@
                 </div>
             </div>
 
-            <!-- Summary -->
-            <div class="glass-card" style="padding:1.5rem;background:linear-gradient(135deg,rgba(99,102,241,0.05) 0%,transparent 100%);">
-                <h3 style="font-size:0.875rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem;">Quick Summary</h3>
-                <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                    <div style="display:flex;justify-content:space-between;">
-                        <span style="color:var(--text-secondary);">Total Colocation Spend:</span>
-                        <span style="color:var(--text-primary);font-weight:700;">{{ number_format($expenses->sum('amount'), 2) }} €</span>
+            <!-- Summary & Stats -->
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+                <div class="glass-card" style="padding:1.5rem;background:linear-gradient(135deg,rgba(16,185,129,0.05) 0%,transparent 100%);">
+                    <h3 style="font-size:0.875rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:1rem;">Monthly Breakdown</h3>
+                    <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                        @forelse($statsByCategory as $stats)
+                            <div>
+                                <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.875rem;">
+                                    <span style="color:var(--text-secondary);display:flex;align-items:center;gap:0.4rem;">
+                                        <span>{{ $stats['icon'] }}</span> {{ $stats['name'] }}
+                                    </span>
+                                    <span style="color:var(--text-primary);font-weight:700;">{{ number_format($stats['total'], 2) }} €</span>
+                                </div>
+                                <div style="width:100%;height:4px;background:rgba(255,255,255,0.05);border-radius:999px;overflow:hidden;">
+                                    @php
+                                        $totalMonth = $expenses->sum('amount');
+                                        $percentage = $totalMonth > 0 ? ($stats['total'] / $totalMonth) * 100 : 0;
+                                    @endphp
+                                    <div style="width:{{ $percentage }}%;height:100%;background:{{ $stats['color'] }};border-radius:999px;"></div>
+                                </div>
+                            </div>
+                        @empty
+                            <p style="color:var(--text-muted);font-size:0.875rem;">No data for this month.</p>
+                        @endforelse
+                    </div>
+
+                    <div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:0.875rem;color:var(--text-muted);">Total Spend:</span>
+                        <span style="font-size:1.125rem;font-weight:800;color:var(--text-primary);">{{ number_format($expenses->sum('amount'), 2) }} €</span>
                     </div>
                 </div>
             </div>
@@ -187,27 +212,31 @@
             @csrf
             <div class="form-group">
                 <label class="form-label">Expense Title</label>
-                <input type="text" name="title" required class="form-input" placeholder="e.g. Weekly Groceries">
+                <input type="text" name="title" value="{{ old('title') }}" required class="form-input" placeholder="e.g. Weekly Groceries">
+                @error('title') <span style="color:var(--danger);font-size:0.75rem;">{{ $message }}</span> @enderror
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
                 <div class="form-group">
                     <label class="form-label">Amount (€)</label>
-                    <input type="number" name="amount" step="0.01" required class="form-input" placeholder="0.00">
+                    <input type="number" name="amount" step="0.01" value="{{ old('amount') }}" required class="form-input" placeholder="0.00">
+                    @error('amount') <span style="color:var(--danger);font-size:0.75rem;">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group">
                     <label class="form-label">Category</label>
                     <select name="category_id" required class="form-input">
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                         @endforeach
                     </select>
+                    @error('category_id') <span style="color:var(--danger);font-size:0.75rem;">{{ $message }}</span> @enderror
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="form-label">Date</label>
-                <input type="date" name="expense_date" required class="form-input" value="{{ date('Y-m-d') }}">
+                <input type="date" name="expense_date" required class="form-input" value="{{ old('expense_date', date('Y-m-d')) }}">
+                @error('expense_date') <span style="color:var(--danger);font-size:0.75rem;">{{ $message }}</span> @enderror
             </div>
 
             <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
