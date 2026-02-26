@@ -98,6 +98,8 @@ class ColocationController extends Controller
             abort(403, 'Only the owner can delete this colocation.');
         }
 
+        $colocation->recalculateBalances();
+
         // Reputation logic for all members
         foreach ($colocation->memberships()->whereNull('left')->get() as $m) {
             $hasDebt = $colocation->settlements()->where('from_user_id', $m->user_id)->where('is_paid', false)->exists();
@@ -127,11 +129,28 @@ class ColocationController extends Controller
                 ->with('error', 'Owner cannot leave the colocation. Delete it instead.');
         }
 
-        // Check for debt
-        $hasDebt = $colocation->settlements()->where('from_user_id', Auth::id())->where('is_paid', false)->exists();
-        Auth::user()->increment('reputation', $hasDebt ? -1 : 1);
+        // Check for debt and impute to owner if necessary
+        $colocation->recalculateBalances();
+        $debtAmount = $colocation->settlements()->where('from_user_id', Auth::id())->where('is_paid', false)->sum('amount');
+        
+        if ($debtAmount > 0) {
+            // Redistribution: owner takes over the debt
+            $owner = $colocation->memberships()->where('role', 'OWNER')->whereNull('left')->first();
+            if ($owner && $owner->user_id !== Auth::id()) {
+                \App\Models\Settlement::create([
+                    'colocation_id' => $colocation->id,
+                    'from_user_id' => Auth::id(), // Member balance increases
+                    'to_user_id' => $owner->user_id, // Owner balance decreases
+                    'amount' => $debtAmount,
+                    'is_paid' => true,
+                ]);
+            }
+        }
+
+        Auth::user()->increment('reputation', $debtAmount > 0.01 ? -1 : 1);
 
         $membership->update(['left' => now()]);
+        $colocation->recalculateBalances();
 
         return redirect()->route('colocations.index')
             ->with('success', 'You have left the colocation. Reputation updated.');
@@ -163,22 +182,26 @@ class ColocationController extends Controller
         }
 
         // Debt imputation logic: If member has debt, it's transferred to owner
-        $debtSettlements = $colocation->settlements()
+        $colocation->recalculateBalances();
+        $debtAmount = $colocation->settlements()
             ->where('from_user_id', $userId)
             ->where('is_paid', false)
-            ->get();
+            ->sum('amount');
 
-        foreach ($debtSettlements as $settlement) {
-            if ($settlement->to_user_id === Auth::id()) {
-                // If they owed the owner, it's just canceled
-                $settlement->delete();
-            } else {
-                // Transfer debt to owner
-                $settlement->update(['from_user_id' => Auth::id()]);
-            }
+        if ($debtAmount > 0) {
+            \App\Models\Settlement::create([
+                'colocation_id' => $colocation->id,
+                'from_user_id' => $userId, // Member balance increases
+                'to_user_id' => Auth::id(), // Owner balance decreases
+                'amount' => $debtAmount,
+                'is_paid' => true,
+            ]);
         }
 
+        $memberMembership->user->increment('reputation', $debtAmount > 0.01 ? -1 : 1);
+
         $memberMembership->update(['left' => now()]);
+        $colocation->recalculateBalances();
 
         return redirect()->back()
             ->with('success', 'Member removed. Their remaining debts were transferred to you.');
