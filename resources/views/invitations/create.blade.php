@@ -20,7 +20,7 @@
                 <div>
                     <p style="font-size:0.875rem;font-weight:600;color:#67e8f9;margin-bottom:0.25rem;">How invitations work</p>
                     <p style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;">
-                        An email will be sent to the address below with a secure link valid for <strong>7 days</strong>. The person must not already be part of another colocation.
+                        A notification will be sent immediately to the user's dashboard if they are registered. The invitation remains valid for <strong>7 days</strong>. The person must not already be part of another colocation.
                     </p>
                 </div>
             </div>
