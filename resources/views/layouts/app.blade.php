@@ -13,27 +13,28 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            .swal2-popup {
+                background: rgba(17, 24, 39, 0.95) !important;
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 1rem !important;
+                color: #f3f4f6 !important;
+            }
+            .swal2-title, .swal2-html-container {
+                color: #f3f4f6 !important;
+            }
+            .swal2-confirm {
+                background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
+                box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3) !important;
+            }
+        </style>
     </head>
     <body class="antialiased">
 
         <!-- Navigation -->
         @include('layouts.navigation')
-
-        <!-- Flash Messages -->
-        <div id="flash-container" style="position:fixed;top:5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:0.75rem;max-width:400px;">
-            @if(session('success'))
-                <div class="alert alert-success animate-fade-in" id="flash-success">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink:0;margin-top:1px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>{{ session('success') }}</span>
-                </div>
-            @endif
-            @if(session('error'))
-                <div class="alert alert-error animate-fade-in" id="flash-error">
-                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="flex-shrink:0;margin-top:1px"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span>{{ session('error') }}</span>
-                </div>
-            @endif
-        </div>
 
         <!-- Page Content -->
         <main>
@@ -41,15 +42,46 @@
         </main>
 
         <script>
-            // Auto-dismiss flash messages after 4s
-            setTimeout(() => {
-                document.querySelectorAll('#flash-success, #flash-error').forEach(el => {
-                    el.style.transition = 'opacity 0.4s, transform 0.4s';
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateX(20px)';
-                    setTimeout(() => el.remove(), 400);
+            document.addEventListener('DOMContentLoaded', function() {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
                 });
-            }, 4000);
+
+                @if(session('success'))
+                    Toast.fire({
+                        icon: 'success',
+                        title: '{{ session('success') }}',
+                        background: '#111827',
+                        color: '#fff'
+                    });
+                @endif
+
+                @if(session('error'))
+                    Toast.fire({
+                        icon: 'error',
+                        title: '{{ session('error') }}',
+                        background: '#111827',
+                        color: '#fff'
+                    });
+                @endif
+
+                @if(session('warning'))
+                    Toast.fire({
+                        icon: 'warning',
+                        title: '{{ session('warning') }}',
+                        background: '#111827',
+                        color: '#fff'
+                    });
+                @endif
+            });
         </script>
     </body>
 </html>
