@@ -6,6 +6,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -49,5 +51,27 @@ class User extends Authenticatable
             'is_banned' => 'boolean',
             'is_admin' => 'boolean',
         ];
+    }
+
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(Membership::class);
+    }
+
+    public function colocations(): BelongsToMany
+    {
+        return $this->belongsToMany(Colocation::class, 'memberships')
+            ->withPivot('role', 'join', 'left')
+            ->withTimestamps();
+    }
+
+    public function activeMembership()
+    {
+        return $this->memberships()->whereNull('left')->first();
+    }
+
+    public function hasActiveMembership(): bool
+    {
+        return $this->memberships()->whereNull('left')->exists();
     }
 }
