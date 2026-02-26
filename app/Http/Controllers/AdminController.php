@@ -84,8 +84,35 @@ class AdminController extends Controller
         }
 
         $user->update(['is_banned' => !$user->is_banned]);
+
+        if ($user->is_banned) {
+            // Find active memberships where this user is OWNER
+            $ownedMemberships = \App\Models\Membership::where('user_id', $user->id)
+                ->where('role', 'OWNER')
+                ->whereNull('left')
+                ->get();
+
+            foreach ($ownedMemberships as $membership) {
+                $colocation = $membership->colocation;
+                
+                // Find potential successor: earliest joining member who is not the banned user
+                $successor = \App\Models\Membership::where('colocation_id', $colocation->id)
+                    ->where('user_id', '!=', $user->id)
+                    ->whereNull('left')
+                    ->orderBy('join', 'asc')
+                    ->first();
+
+                if ($successor) {
+                    // Update successsor to OWNER
+                    $successor->update(['role' => 'OWNER']);
+                    // Downgrade banned user to MEMBER (optional, but cleaner for roles)
+                    $membership->update(['role' => 'MEMBER']);
+                }
+            }
+        }
+
         $status = $user->is_banned ? 'banned' : 'unbanned';
 
-        return redirect()->back()->with('success', "User {$user->name} has been {$status}.");
+        return redirect()->back()->with('success', "User {$user->name} has been {$status}. Any owned colocations were transferred to housemates.");
     }
 }
