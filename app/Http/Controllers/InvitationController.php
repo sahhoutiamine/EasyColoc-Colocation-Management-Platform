@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Colocation;
 use App\Models\Invitation;
 use App\Models\Membership;
-use App\Mail\ColocationInvitation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -49,10 +47,8 @@ class InvitationController extends Controller
             'expires_at' => now()->addDays(7),
         ]);
 
-        Mail::to($validated['email'])->send(new ColocationInvitation($invitation));
-
         return redirect()->route('colocations.index')
-            ->with('success', 'Invitation sent successfully.');
+            ->with('success', 'Invitation sent successfully. It will appear in the recipient\'s notifications.');
     }
 
     public function show($token)
