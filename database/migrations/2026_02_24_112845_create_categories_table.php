@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('categories');
+        
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('colocation_id')->constrained()->onDelete('cascade');
-            $table->string('name');
+            $table->string('name')->unique();
+            $table->string('icon')->nullable();
+            $table->string('color')->nullable();
             $table->timestamps();
         });
     }
