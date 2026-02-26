@@ -26,7 +26,7 @@ class ExpenseController extends Controller
 
         $query = $colocation->expenses()->with(['payer', 'category']);
 
-        if ($request->has('month')) {
+        if ($request->has('month') && $request->month != "") {
             $query->whereMonth('expense_date', $request->month);
             $query->whereYear('expense_date', now()->year);
         }
@@ -35,7 +35,17 @@ class ExpenseController extends Controller
         $categories = Category::all();
         $settlements = $colocation->settlements()->with(['fromUser', 'toUser'])->get();
 
-        return view('expenses.index', compact('colocation', 'expenses', 'categories', 'settlements'));
+        // Calculate statistics per category
+        $statsByCategory = $expenses->groupBy('category_id')->map(function ($items) {
+            return [
+                'name' => $items->first()->category->name,
+                'icon' => $items->first()->category->icon,
+                'color' => $items->first()->category->color,
+                'total' => $items->sum('amount'),
+            ];
+        });
+
+        return view('expenses.index', compact('colocation', 'expenses', 'categories', 'settlements', 'statsByCategory'));
     }
 
     public function store(Request $request, Colocation $colocation)
@@ -61,10 +71,51 @@ class ExpenseController extends Controller
 
         DB::transaction(function () use ($validated, $colocation) {
             Expense::create($validated);
-            $this->recalculateSettlements($colocation);
+            $colocation->recalculateBalances();
         });
 
         return redirect()->back()->with('success', 'Expense added and balances updated.');
+    }
+
+    public function edit(Colocation $colocation, Expense $expense)
+    {
+        $membership = $colocation->memberships()
+            ->where('user_id', Auth::id())
+            ->whereNull('left')
+            ->first();
+
+        if (!$membership || ($expense->payer_id !== Auth::id() && $membership->role !== 'OWNER')) {
+            abort(403);
+        }
+
+        $categories = Category::all();
+        return view('expenses.edit', compact('colocation', 'expense', 'categories'));
+    }
+
+    public function update(Request $request, Colocation $colocation, Expense $expense)
+    {
+        $membership = $colocation->memberships()
+            ->where('user_id', Auth::id())
+            ->whereNull('left')
+            ->first();
+
+        if (!$membership || ($expense->payer_id !== Auth::id() && $membership->role !== 'OWNER')) {
+            abort(403);
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'amount' => 'required|numeric|min:0.01',
+            'category_id' => 'required|exists:categories,id',
+            'expense_date' => 'required|date',
+        ]);
+
+        DB::transaction(function () use ($validated, $colocation, $expense) {
+            $expense->update($validated);
+            $colocation->recalculateBalances();
+        });
+
+        return redirect()->route('colocations.expenses.index', $colocation)->with('success', 'Expense updated and balances recalculated.');
     }
 
     public function destroy(Colocation $colocation, Expense $expense)
@@ -80,7 +131,7 @@ class ExpenseController extends Controller
 
         DB::transaction(function () use ($expense, $colocation) {
             $expense->delete();
-            $this->recalculateSettlements($colocation);
+            $colocation->recalculateBalances();
         });
 
         return redirect()->back()->with('success', 'Expense removed and balances updated.');
@@ -98,62 +149,8 @@ class ExpenseController extends Controller
         }
 
         $settlement->update(['is_paid' => true]);
+        $colocation->recalculateBalances();
 
         return redirect()->back()->with('success', 'Payment marked as paid.');
-    }
-
-    private function recalculateSettlements(Colocation $colocation)
-    {
-        // 1. Clear old UNPAID settlements
-        $colocation->settlements()->where('is_paid', false)->delete();
-
-        $activeMemberships = $colocation->memberships()->whereNull('left')->get();
-        $memberCount = $activeMemberships->count();
-
-        if ($memberCount <= 1) return;
-
-        $totalExpenses = $colocation->expenses()->sum('amount');
-        $fairShare = $totalExpenses / $memberCount;
-
-        $balances = [];
-        foreach ($activeMemberships as $m) {
-            $paid = $colocation->expenses()->where('payer_id', $m->user_id)->sum('amount');
-            $balances[$m->user_id] = $paid - $fairShare;
-        }
-
-        // 2. Settlement logic
-        $debtors = []; // negative balance
-        $creditors = []; // positive balance
-
-        foreach ($balances as $userId => $balance) {
-            if ($balance < -0.01) {
-                $debtors[$userId] = abs($balance);
-            } elseif ($balance > 0.01) {
-                $creditors[$userId] = $balance;
-            }
-        }
-
-        arsort($debtors);
-        arsort($creditors);
-
-        foreach ($debtors as $debtorId => $debtAmount) {
-            foreach ($creditors as $creditorId => &$creditAmount) {
-                if ($debtAmount <= 0) break;
-                if ($creditAmount <= 0) continue;
-
-                $amount = min($debtAmount, $creditAmount);
-                
-                Settlement::create([
-                    'colocation_id' => $colocation->id,
-                    'from_user_id' => $debtorId,
-                    'to_user_id' => $creditorId,
-                    'amount' => $amount,
-                    'is_paid' => false,
-                ]);
-
-                $debtAmount -= $amount;
-                $creditAmount -= $amount;
-            }
-        }
     }
 }
