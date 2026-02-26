@@ -24,6 +24,8 @@ Route::middleware(['auth', 'banned'])->group(function () {
     // Expenses & Settlements
     Route::get('colocations/{colocation}/expenses', [App\Http\Controllers\ExpenseController::class, 'index'])->name('colocations.expenses.index');
     Route::post('colocations/{colocation}/expenses', [App\Http\Controllers\ExpenseController::class, 'store'])->name('colocations.expenses.store');
+    Route::get('colocations/{colocation}/expenses/{expense}/edit', [App\Http\Controllers\ExpenseController::class, 'edit'])->name('colocations.expenses.edit');
+    Route::patch('colocations/{colocation}/expenses/{expense}', [App\Http\Controllers\ExpenseController::class, 'update'])->name('colocations.expenses.update');
     Route::delete('colocations/{colocation}/expenses/{expense}', [App\Http\Controllers\ExpenseController::class, 'destroy'])->name('colocations.expenses.destroy');
     Route::post('colocations/{colocation}/settlements/{settlement}/paid', [App\Http\Controllers\ExpenseController::class, 'markPaid'])->name('colocations.settlements.paid');
 
