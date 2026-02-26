@@ -98,6 +98,11 @@ class ColocationController extends Controller
             abort(403, 'Only the owner can delete this colocation.');
         }
 
+        $activeMembersCount = $colocation->memberships()->whereNull('left')->count();
+        if ($activeMembersCount > 1) {
+            return redirect()->back()->with('error', 'You cannot cancel the colocation while there are still other members. Please remove them or ask them to leave first.');
+        }
+
         $colocation->recalculateBalances();
 
         // Reputation logic for all members
