@@ -74,4 +74,11 @@ class User extends Authenticatable
     {
         return $this->memberships()->whereNull('left')->exists();
     }
+
+    public function pendingInvitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class, 'email', 'email')
+            ->where('status', 'PENDING')
+            ->where('expires_at', '>', now());
+    }
 }
