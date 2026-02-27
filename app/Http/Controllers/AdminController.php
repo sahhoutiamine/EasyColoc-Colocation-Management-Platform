@@ -20,15 +20,19 @@ class AdminController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_colocations' => Colocation::count(),
+            'active_colocations' => Colocation::where('status', 'ACTIVE')->count(),
+            'cancelled_colocations' => Colocation::where('status', 'CANCELLED')->count(),
             'total_expenses' => Expense::sum('amount'),
             'banned_users' => User::where('is_banned', true)->count(),
         ];
 
         $users = User::orderBy('created_at', 'desc')->paginate(10);
         $colocations = Colocation::with('memberships')->orderBy('created_at', 'desc')->take(5)->get();
-        $categories = Category::all();
+        
+        // Data for category chart
+        $expensesByCategory = Category::withSum('expenses', 'amount')->get();
 
-        return view('admin.dashboard', compact('stats', 'users', 'colocations', 'categories'));
+        return view('admin.dashboard', compact('stats', 'users', 'colocations', 'expensesByCategory'));
     }
 
     public function categories()
