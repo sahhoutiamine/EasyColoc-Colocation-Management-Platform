@@ -9,6 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\InvitationMail;
+
 class InvitationController extends Controller
 {
     public function create(Colocation $colocation)
@@ -47,8 +50,10 @@ class InvitationController extends Controller
             'expires_at' => now()->addDays(7),
         ]);
 
+        Mail::to($validated['email'])->send(new InvitationMail($invitation));
+
         return redirect()->route('colocations.index')
-            ->with('success', 'Invitation sent successfully. It will appear in the recipient\'s notifications.');
+            ->with('success', 'Invitation sent successfully via email.');
     }
 
     public function show($token)
