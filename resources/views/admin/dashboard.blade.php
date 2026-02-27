@@ -15,7 +15,7 @@
     </div>
 
     <!-- Stats Row -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-bottom:2.5rem;" class="animate-fade-in-delay-1">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2.5rem;" class="animate-fade-in-delay-1">
         <div class="stat-card">
             <div class="stat-icon" style="background:rgba(99,102,241,0.15);"><span style="font-size:1.25rem;">👥</span></div>
             <div class="stat-value">{{ $stats['total_users'] }}</div>
@@ -23,18 +23,48 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background:rgba(6,182,212,0.15);"><span style="font-size:1.25rem;">🏠</span></div>
-            <div class="stat-value">{{ $stats['total_colocations'] }}</div>
+            <div style="display:flex; flex-direction:column; align-items:center;">
+                <div class="stat-value">{{ $stats['total_colocations'] }}</div>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
+                    <span style="color:var(--success)">{{ $stats['active_colocations'] }} active</span> • <span>{{ $stats['cancelled_colocations'] }} dead</span>
+                </div>
+            </div>
             <div class="stat-label">Colocations</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background:rgba(16,185,129,0.15);"><span style="font-size:1.25rem;">💰</span></div>
-            <div class="stat-value">{{ number_format($stats['total_expenses'] / 1000, 1) }}k</div>
-            <div class="stat-label">Total Expenses (€)</div>
+            <div class="stat-value">{{ number_format($stats['total_expenses'], 2) }} €</div>
+            <div class="stat-label">Total Expenses</div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background:rgba(239,68,68,0.15);"><span style="font-size:1.25rem;">🚫</span></div>
             <div class="stat-value">{{ $stats['banned_users'] }}</div>
             <div class="stat-label">Banned Users</div>
+        </div>
+    </div>
+
+    <!-- Expenses Chart -->
+    <div class="glass-card animate-fade-in-delay-2" style="margin-bottom: 2rem;">
+        <div style="padding:1.5rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
+            <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);">Expenses per Category</h2>
+        </div>
+        <div style="padding:1.5rem;">
+            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                @php $maxExpense = $expensesByCategory->max('expenses_sum_amount') ?: 1; @endphp
+                @foreach($expensesByCategory as $cat)
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div style="width:100px; font-size:0.875rem; color:var(--text-secondary); text-align:right;">
+                            {{ $cat->icon }} {{ $cat->name }}
+                        </div>
+                        <div style="flex:1; height:12px; background:rgba(255,255,255,0.05); border-radius:999px; overflow:hidden; position:relative;">
+                            <div style="width:{{ ($cat->expenses_sum_amount / $maxExpense) * 100 }}%; height:100%; background:{{ $cat->color }}; border-radius:999px; transition:width 1s ease-out;"></div>
+                        </div>
+                        <div style="width:80px; font-size:0.875rem; font-weight:700; color:var(--text-primary);">
+                            {{ number_format($cat->expenses_sum_amount, 2) }} €
+                        </div>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 
@@ -49,6 +79,7 @@
                 <thead>
                     <tr style="background:rgba(255,255,255,0.02);">
                         <th style="padding:1rem 1.5rem;font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">User</th>
+                        <th style="padding:1rem 1.5rem;font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Role</th>
                         <th style="padding:1rem 1.5rem;font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Reputation</th>
                         <th style="padding:1rem 1.5rem;font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Status</th>
                         <th style="padding:1rem 1.5rem;font-size:0.75rem;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Joined</th>
@@ -68,6 +99,11 @@
                                     <div style="font-size:0.8125rem;color:var(--text-muted);">{{ $u->email }}</div>
                                 </div>
                             </div>
+                        </td>
+                        <td style="padding:1rem 1.5rem;">
+                            <span class="badge" style="background:{{ $u->is_admin ? 'rgba(99,102,241,0.1)' : 'rgba(255,255,255,0.05)' }}; color:{{ $u->is_admin ? 'var(--primary-light)' : 'var(--text-muted)' }};">
+                                {{ $u->is_admin ? 'Admin' : 'User' }}
+                            </span>
                         </td>
                         <td style="padding:1rem 1.5rem;">
                             <span class="reputation-badge {{ $u->reputation > 0 ? 'reputation-positive' : ($u->reputation < 0 ? 'reputation-negative' : 'reputation-neutral') }}">
