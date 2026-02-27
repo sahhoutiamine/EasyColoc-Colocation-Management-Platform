@@ -202,13 +202,19 @@ class SettlementTest extends TestCase
         $settlement = Settlement::where('from_user_id', $memberNoDebt->id)->first();
         $settlement->update(['is_paid' => true]);
 
+        // Members must leave before owner can cancel
+        $this->actingAs($memberWithDebt)->post(route('colocations.leave', $colocation));
+        $this->actingAs($memberNoDebt)->post(route('colocations.leave', $colocation));
+
         // Cancel colocation
         $this->actingAs($owner)->delete(route('colocations.destroy', $colocation));
 
         $memberWithDebt->refresh();
         $memberNoDebt->refresh();
+        $owner->refresh();
 
         $this->assertEquals(-1, $memberWithDebt->reputation);
         $this->assertEquals(1, $memberNoDebt->reputation);
+        $this->assertEquals(1, $owner->reputation); // Owner had no debt (he was the creditor)
     }
 }
