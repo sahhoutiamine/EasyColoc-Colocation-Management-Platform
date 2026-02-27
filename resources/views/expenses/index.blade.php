@@ -121,6 +121,18 @@
         <!-- Right: Balances & Settlements -->
         <div style="display:flex;flex-direction:column;gap:1.5rem;">
             
+            <div class="glass-card" style="padding:1.5rem; margin-bottom: 1.5rem;">
+                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;">Contribution Summary</h2>
+                <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                    @foreach($memberStats as $stat)
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border);">
+                            <span style="font-size:0.875rem; color:var(--text-secondary);">{{ $stat['name'] }}</span>
+                            <span style="font-size:1rem; font-weight:700; color:var(--text-primary);">{{ number_format($stat['total_paid'], 2) }} €</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <div class="glass-card" style="padding:1.5rem;">
                 <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;">
                     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--primary-light)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
