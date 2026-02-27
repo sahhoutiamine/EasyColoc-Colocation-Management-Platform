@@ -35,6 +35,15 @@ class ExpenseController extends Controller
         $categories = Category::all();
         $settlements = $colocation->settlements()->with(['fromUser', 'toUser'])->get();
 
+        // Calculate total paid per member
+        $members = $colocation->users()->wherePivot('left', null)->get();
+        $memberStats = $members->map(function ($member) use ($colocation) {
+            return [
+                'name' => $member->name,
+                'total_paid' => $colocation->expenses()->where('payer_id', $member->id)->sum('amount'),
+            ];
+        });
+
         // Calculate statistics per category
         $statsByCategory = $expenses->groupBy('category_id')->map(function ($items) {
             return [
@@ -45,7 +54,7 @@ class ExpenseController extends Controller
             ];
         });
 
-        return view('expenses.index', compact('colocation', 'expenses', 'categories', 'settlements', 'statsByCategory'));
+        return view('expenses.index', compact('colocation', 'expenses', 'categories', 'settlements', 'statsByCategory', 'memberStats'));
     }
 
     public function store(Request $request, Colocation $colocation)
