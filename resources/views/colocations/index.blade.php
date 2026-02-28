@@ -28,7 +28,9 @@
             <div style="display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:1.5rem;">
                 <div>
                     <div style="display:flex;align-items:center;gap:0.875rem;margin-bottom:0.875rem;">
-                        <div style="width:3rem;height:3rem;border-radius:0.875rem;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:1.375rem;box-shadow:0 4px 15px rgba(99,102,241,0.3);">🏠</div>
+                        <div style="width:3rem;height:3rem;border-radius:0.875rem;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 15px rgba(99,102,241,0.3);">
+                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        </div>
                         <div>
                             <h2 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.03em;line-height:1.1;">
                                 {{ $colocation->name }}
@@ -154,7 +156,9 @@
         <!-- Empty State: No Colocation -->
         <div class="glass-card animate-fade-in" style="padding:0;">
             <div class="empty-state">
-                <div class="empty-state-icon" style="font-size:2.5rem;">🏠</div>
+                <div class="empty-state-icon">
+                    <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--text-muted)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </div>
                 <div style="max-width:400px;">
                     <h2 style="font-size:1.375rem;font-weight:800;color:var(--text-primary);margin-bottom:0.625rem;">No active colocation</h2>
                     <p style="color:var(--text-secondary);line-height:1.6;">You're not part of any colocation yet. Create your own or wait for someone to invite you via a link.</p>
@@ -175,7 +179,7 @@
 <!-- Confirm Modals via JS -->
 <script>
     function confirmCancel() {
-        if (confirm('⚠️ Cancel this colocation? This action cannot be undone.')) {
+        if (confirm('Cancel this colocation? This action cannot be undone.')) {
             document.getElementById('cancel-coloc-form').submit();
         }
     }
