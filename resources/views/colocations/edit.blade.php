@@ -15,7 +15,9 @@
 
         <!-- Current Info -->
         <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:0.75rem;padding:1rem 1.25rem;margin-bottom:2rem;display:flex;align-items:center;gap:1rem;">
-            <div style="width:2.75rem;height:2.75rem;border-radius:0.75rem;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0;">🏠</div>
+            <div style="width:2.75rem;height:2.75rem;border-radius:0.75rem;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </div>
             <div>
                 <p style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.2rem;">Currently</p>
                 <p style="font-weight:700;color:var(--text-primary);font-size:1rem;">{{ $colocation->name }}</p>
