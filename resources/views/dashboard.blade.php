@@ -11,8 +11,9 @@
     <!-- Page Header -->
     <div class="page-header animate-fade-in" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem;">
         <div>
-            <p style="font-size:0.875rem;color:var(--text-muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;">
-                👋 Welcome back
+            <p style="font-size:0.875rem;color:var(--text-muted);font-weight:500;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Welcome back
             </p>
             <h1 class="page-title">{{ $user->name }}</h1>
             <p class="page-subtitle">Here's what's happening with your colocation.</p>
@@ -39,7 +40,11 @@
         <!-- Reputation -->
         <div class="stat-card">
             <div class="stat-icon" style="background:{{ $rep >= 0 ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)' }};">
-                <span style="font-size:1.25rem;">{{ $rep >= 0 ? '⭐' : '📉' }}</span>
+                @if($rep >= 0)
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#6ee7b7" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                @else
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fca5a5" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+                @endif
             </div>
             <div class="stat-value" style="background:{{ $rep > 0 ? 'linear-gradient(135deg,#6ee7b7,#10b981)' : ($rep < 0 ? 'linear-gradient(135deg,#fca5a5,#ef4444)' : 'linear-gradient(135deg,#94a3b8,#64748b)') }};-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
                 {{ $rep > 0 ? '+' : '' }}{{ $rep }}
@@ -94,8 +99,9 @@
         <!-- Left: Current Colocation -->
         <div class="glass-card" style="padding:1.75rem;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
-                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);">
-                    🏠 My Colocation
+                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    My Colocation
                 </h2>
                 @if($activeMembership)
                     <span class="badge badge-active">Active</span>
@@ -142,7 +148,9 @@
                 </a>
             @else
                 <div class="empty-state" style="padding:2rem 1rem;">
-                    <div class="empty-state-icon">🏠</div>
+                    <div class="empty-state-icon">
+                        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="var(--text-muted)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    </div>
                     <div>
                         <p style="font-size:1rem;font-weight:600;color:var(--text-primary);margin-bottom:0.5rem;">No colocation yet</p>
                         <p style="font-size:0.875rem;color:var(--text-muted);">Create one or join via an invitation link</p>
@@ -160,7 +168,10 @@
 
             <!-- Quick Actions -->
             <div class="glass-card" style="padding:1.75rem;">
-                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;">⚡ Quick Actions</h2>
+                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--accent)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    Quick Actions
+                </h2>
                 <div style="display:flex;flex-direction:column;gap:0.625rem;">
                     @if(!$activeMembership)
                         <a href="{{ route('colocations.create') }}" class="btn btn-primary" style="justify-content:flex-start;">
@@ -193,7 +204,10 @@
 
             <!-- Reputation Info -->
             <div class="glass-card" style="padding:1.75rem;">
-                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;">📊 Reputation System</h2>
+                <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                    Reputation System
+                </h2>
                 <div style="display:flex;flex-direction:column;gap:0.75rem;">
                     <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border-radius:0.625rem;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);">
                         <div style="width:2rem;height:2rem;border-radius:0.5rem;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;">+1</div>
