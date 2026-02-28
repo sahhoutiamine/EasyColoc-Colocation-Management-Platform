@@ -50,10 +50,15 @@ class InvitationController extends Controller
             'expires_at' => now()->addDays(7),
         ]);
 
-        Mail::to($validated['email'])->send(new InvitationMail($invitation));
+        try {
+            Mail::to($validated['email'])->send(new InvitationMail($invitation));
+            $message = 'Invitation sent successfully via email.';
+        } catch (\Exception $e) {
+            $message = 'Invitation created. Email could not be sent due to rate limits. Share the link manually.';
+        }
 
         return redirect()->route('colocations.index')
-            ->with('success', 'Invitation sent successfully via email.');
+            ->with('success', $message);
     }
 
     public function show($token)
