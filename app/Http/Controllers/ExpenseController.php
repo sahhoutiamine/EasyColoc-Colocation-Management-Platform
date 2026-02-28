@@ -33,7 +33,10 @@ class ExpenseController extends Controller
 
         $expenses = $query->orderBy('expense_date', 'desc')->get();
         $categories = Category::all();
-        $settlements = $colocation->settlements()->with(['fromUser', 'toUser'])->get();
+        // Only show UNPAID settlements in "Who owes how much".
+        // Paid imputation settlements (created when a member is removed/leaves with debt)
+        // are internal accounting records and should not appear to remaining members.
+        $settlements = $colocation->settlements()->with(['fromUser', 'toUser'])->where('is_paid', false)->get();
 
         // Calculate total paid per member
         $members = $colocation->users()->wherePivot('left', null)->get();
