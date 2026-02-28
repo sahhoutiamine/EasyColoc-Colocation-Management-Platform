@@ -21,8 +21,8 @@
         @foreach($categories as $cat)
         <div class="glass-card" style="padding:1.5rem;display:flex;align-items:center;justify-content:space-between;">
             <div style="display:flex;align-items:center;gap:1.25rem;">
-                <div style="width:3.5rem;height:3.5rem;border-radius:1rem;background:{{ $cat->color }}15;border:1px solid {{ $cat->color }}30;display:flex;align-items:center;justify-content:center;font-size:1.75rem;">
-                    {{ $cat->icon ?? '📦' }}
+                <div style="width:3.5rem;height:3.5rem;border-radius:1rem;background:{{ $cat->color }}15;border:1px solid {{ $cat->color }}30;display:flex;align-items:center;justify-content:center;">
+                    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="{{ $cat->color }}" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
                 </div>
                 <div>
                     <h3 style="font-weight:700;color:var(--text-primary);margin-bottom:0.25rem;">{{ $cat->name }}</h3>
@@ -64,8 +64,8 @@
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
                 <div class="form-group">
-                    <label class="form-label">Icon (Emoji)</label>
-                    <input type="text" name="icon" class="form-input" placeholder="💳">
+                    <label class="form-label">Color Accent (Hex)</label>
+                    <input type="text" name="icon" class="form-input" placeholder="e.g. Food, Rent" style="display:none">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Color (Hex)</label>
