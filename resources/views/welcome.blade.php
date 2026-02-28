@@ -110,18 +110,47 @@
 
                 @php
                 $features = [
-                    ['🏠','Create & Manage','Set up your colocation, invite housemates, and manage everything in one place.','rgba(99,102,241,0.1)'],
-                    ['💸','Split Expenses','Add expenses, assign payers, and let EasyColoc calculate who owes what automatically.','rgba(6,182,212,0.1)'],
-                    ['⚖️','Balance Tracking','Always know the current balance with a clear view of who owes who and how much.','rgba(16,185,129,0.1)'],
-                    ['📧','Invite by Email','Send secure invitation links to your future housemates directly via email.','rgba(245,158,11,0.1)'],
-                    ['⭐','Reputation System','Build trust with a reputation score reflecting your financial responsibility.','rgba(239,68,68,0.1)'],
-                    ['🛡️','Admin Control','Global admins monitor the platform, manage users, and ensure smooth operation.','rgba(139,92,246,0.1)'],
+                    [
+                        'Create & Manage',
+                        'Set up your colocation, invite housemates, and manage everything in one place.',
+                        'rgba(99,102,241,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#818cf8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>'
+                    ],
+                    [
+                        'Split Expenses',
+                        'Add expenses, assign payers, and let EasyColoc calculate who owes what automatically.',
+                        'rgba(6,182,212,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#67e8f9" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>'
+                    ],
+                    [
+                        'Balance Tracking',
+                        'Always know the current balance with a clear view of who owes who and how much.',
+                        'rgba(16,185,129,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#6ee7b7" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>'
+                    ],
+                    [
+                        'Invite by Email',
+                        'Send secure invitation links to your future housemates directly via email.',
+                        'rgba(245,158,11,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fcd34d" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>'
+                    ],
+                    [
+                        'Reputation System',
+                        'Build trust with a reputation score reflecting your financial responsibility.',
+                        'rgba(239,68,68,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fca5a5" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>'
+                    ],
+                    [
+                        'Admin Control',
+                        'Global admins monitor the platform, manage users, and ensure smooth operation.',
+                        'rgba(139,92,246,0.1)',
+                        '<svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#a78bfa" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>'
+                    ],
                 ];
                 @endphp
-
-                @foreach($features as [$emoji, $title, $desc, $bg])
+                @foreach($features as [$title, $desc, $bg, $icon])
                     <div class="glass-card" style="padding:1.5rem;">
-                        <div class="feature-icon" style="background:{{ $bg }};">{{ $emoji }}</div>
+                        <div class="feature-icon" style="background:{{ $bg }};">{!! $icon !!}</div>
                         <h3 style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem;">{{ $title }}</h3>
                         <p style="font-size:0.875rem;color:var(--text-secondary);line-height:1.6;">{{ $desc }}</p>
                     </div>
