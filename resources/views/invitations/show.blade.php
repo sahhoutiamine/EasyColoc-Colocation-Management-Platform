@@ -5,8 +5,11 @@
         <div style="width:100%;">
             <!-- Animated envelope icon -->
             <div style="text-align:center;margin-bottom:2rem;" class="animate-fade-in">
-                <div style="width:5rem;height:5rem;border-radius:1.5rem;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(6,182,212,0.2));border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.5rem;animation:floatAnim 4s ease-in-out infinite;">
-                    ✉️
+                <div style="width:5rem;height:5rem;border-radius:1.5rem;background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(6,182,212,0.2));border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;animation:floatAnim 4s ease-in-out infinite;">
+                    <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="url(#grad)" stroke-width="1.75">
+                        <defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#818cf8"/><stop offset="100%" stop-color="#67e8f9"/></linearGradient></defs>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
                 </div>
                 <h1 style="font-size:2rem;font-weight:800;color:var(--text-primary);letter-spacing:-0.03em;margin-bottom:0.5rem;">You're invited!</h1>
                 <p style="color:var(--text-secondary);font-size:1rem;">You've been invited to join a colocation</p>
