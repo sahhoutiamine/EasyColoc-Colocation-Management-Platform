@@ -54,7 +54,9 @@
                 
                 @if($expenses->isEmpty())
                     <div class="empty-state">
-                        <div class="empty-state-icon">💸</div>
+                        <div class="empty-state-icon">
+                            <svg width="48" height="48" fill="none" viewBox="0 0 24 24" stroke="var(--text-muted)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                        </div>
                         <p style="color:var(--text-secondary);">No expenses recorded for this period.</p>
                     </div>
                 @else
@@ -178,7 +180,7 @@
                             <div>
                                 <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.875rem;">
                                     <span style="color:var(--text-secondary);display:flex;align-items:center;gap:0.4rem;">
-                                        <span>{{ $stats['icon'] }}</span> {{ $stats['name'] }}
+                                        {{ $stats['name'] }}
                                     </span>
                                     <span style="color:var(--text-primary);font-weight:700;">{{ number_format($stats['total'], 2) }} €</span>
                                 </div>
