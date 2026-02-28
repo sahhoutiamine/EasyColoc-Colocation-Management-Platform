@@ -17,12 +17,12 @@
     <!-- Stats Row -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2.5rem;" class="animate-fade-in-delay-1">
         <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(99,102,241,0.15);"><span style="font-size:1.25rem;">👥</span></div>
+            <div class="stat-icon" style="background:rgba(99,102,241,0.15);"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#818cf8" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path stroke-linecap="round" stroke-linejoin="round" d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
             <div class="stat-value">{{ $stats['total_users'] }}</div>
             <div class="stat-label">Total Users</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(6,182,212,0.15);"><span style="font-size:1.25rem;">🏠</span></div>
+            <div class="stat-icon" style="background:rgba(6,182,212,0.15);"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#67e8f9" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
             <div style="display:flex; flex-direction:column; align-items:center;">
                 <div class="stat-value">{{ $stats['total_colocations'] }}</div>
                 <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.25rem;">
@@ -32,12 +32,12 @@
             <div class="stat-label">Colocations</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(16,185,129,0.15);"><span style="font-size:1.25rem;">💰</span></div>
+            <div class="stat-icon" style="background:rgba(16,185,129,0.15);"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#6ee7b7" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
             <div class="stat-value">{{ number_format($stats['total_expenses'], 2) }} €</div>
             <div class="stat-label">Total Expenses</div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(239,68,68,0.15);"><span style="font-size:1.25rem;">🚫</span></div>
+            <div class="stat-icon" style="background:rgba(239,68,68,0.15);"><svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#fca5a5" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg></div>
             <div class="stat-value">{{ $stats['banned_users'] }}</div>
             <div class="stat-label">Banned Users</div>
         </div>
@@ -54,7 +54,7 @@
                 @foreach($expensesByCategory as $cat)
                     <div style="display:flex; align-items:center; gap:1rem;">
                         <div style="width:100px; font-size:0.875rem; color:var(--text-secondary); text-align:right;">
-                            {{ $cat->icon }} {{ $cat->name }}
+                            {{ $cat->name }}
                         </div>
                         <div style="flex:1; height:12px; background:rgba(255,255,255,0.05); border-radius:999px; overflow:hidden; position:relative;">
                             <div style="width:{{ ($cat->expenses_sum_amount / $maxExpense) * 100 }}%; height:100%; background:{{ $cat->color }}; border-radius:999px; transition:width 1s ease-out;"></div>
