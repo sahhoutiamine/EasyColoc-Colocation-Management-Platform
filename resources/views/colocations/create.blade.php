@@ -15,7 +15,9 @@
 
         <!-- Tips -->
         <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:0.75rem;padding:1rem 1.25rem;margin-bottom:2rem;display:flex;gap:0.875rem;">
-            <div style="font-size:1.25rem;flex-shrink:0;">💡</div>
+            <div style="flex-shrink:0;width:1.75rem;height:1.75rem;display:flex;align-items:center;justify-content:center;">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="var(--primary-light)" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
             <div>
                 <p style="font-size:0.875rem;font-weight:600;color:var(--primary-light);margin-bottom:0.25rem;">Tip</p>
                 <p style="font-size:0.8125rem;color:var(--text-secondary);line-height:1.6;">
