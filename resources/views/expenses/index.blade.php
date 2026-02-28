@@ -154,17 +154,12 @@
                             </div>
 
                             <div style="display:flex;justify-content:space-between;align-items:center;">
-                                @if($settlement->is_paid)
-                                    <span class="badge badge-active" style="background:rgba(16,185,129,0.1);color:var(--success);">Paid</span>
-                                @else
-                                    <span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Unpaid</span>
-                                    
-                                    @if($settlement->from_user_id === $user->id || $settlement->to_user_id === $user->id)
-                                    <form method="POST" action="{{ route('colocations.settlements.paid', [$colocation, $settlement]) }}">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-sm">Mark as Paid</button>
-                                    </form>
-                                    @endif
+                                <span class="badge" style="background:rgba(255,255,255,0.05);color:var(--text-muted);">Unpaid</span>
+                                @if($settlement->from_user_id === $user->id || $settlement->to_user_id === $user->id)
+                                <form method="POST" action="{{ route('colocations.settlements.paid', [$colocation, $settlement]) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm">Mark as Paid</button>
+                                </form>
                                 @endif
                             </div>
                         </div>
