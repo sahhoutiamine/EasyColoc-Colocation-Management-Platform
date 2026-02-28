@@ -57,13 +57,21 @@ class Colocation extends Model
         // 2. Process Expenses (Shared logic)
         foreach ($expenses as $expense) {
             $expenseDate = $expense->expense_date->copy()->startOfDay();
-            
-            // Find members active at the time of the expense
-            $activeAtTime = $memberships->filter(function ($m) use ($expenseDate) {
-                // We use startOfDay for dates to avoid time-of-day mismatch
+          
+            $expenseCreatedAt = $expense->created_at;
+
+            // Find members active at the time of the expense.
+            $activeAtTime = $memberships->filter(function ($m) use ($expenseDate, $expenseCreatedAt) {
                 $joinDate = $m->join->copy()->startOfDay();
-                $leftDate = $m->left ? $m->left->copy()->startOfDay() : null;
-                return $joinDate->lte($expenseDate) && (!$leftDate || $leftDate->gte($expenseDate));
+                
+                if ($m->left === null) {
+                    // Member still active
+                    $isLeft = false;
+                } else {
+                  
+                    $isLeft = $expenseCreatedAt->gt($m->left);
+                }
+                return $joinDate->lte($expenseDate) && !$isLeft;
             });
 
             $count = $activeAtTime->count();
@@ -129,4 +137,5 @@ class Colocation extends Model
     {
         return $this->memberships()->where('role', 'OWNER')->whereNull('left')->first()?->user;
     }
+    
 }
