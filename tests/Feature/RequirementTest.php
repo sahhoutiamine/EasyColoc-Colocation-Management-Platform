@@ -61,8 +61,45 @@ class RequirementTest extends TestCase
         $newOwnerMembership = Membership::where('user_id', $member1->id)->first();
         $this->assertEquals('OWNER', $newOwnerMembership->role);
         
-        // banned user should be downgraded
+        // banned user should have left the colocation
         $oldOwnerMembership = Membership::where('user_id', $owner->id)->first();
-        $this->assertEquals('MEMBER', $oldOwnerMembership->role);
+        $this->assertNotNull($oldOwnerMembership->left);
+    }
+
+    public function test_colocation_cancelled_on_ban_if_no_successor(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['name' => 'Banned Only Member']);
+        
+        $colocation = Colocation::create(['name' => 'Test Coloc', 'status' => 'ACTIVE']);
+        
+        Membership::create(['user_id' => $owner->id, 'colocation_id' => $colocation->id, 'role' => 'OWNER', 'join' => now()->subDays(10)]);
+
+        // Admin bans owner
+        $this->actingAs($admin)->post(route('admin.users.ban', $owner));
+
+        $this->assertTrue($owner->refresh()->is_banned);
+        $this->assertEquals('CANCELLED', $colocation->refresh()->status);
+        $this->assertNotNull(Membership::where('user_id', $owner->id)->first()->left);
+    }
+
+    public function test_member_kicked_on_ban(): void
+    {
+        $admin = User::factory()->create(['is_admin' => true]);
+        $owner = User::factory()->create(['name' => 'Owner']);
+        $member = User::factory()->create(['name' => 'Banned Member']);
+        
+        $colocation = Colocation::create(['name' => 'Test Coloc', 'status' => 'ACTIVE']);
+        
+        Membership::create(['user_id' => $owner->id, 'colocation_id' => $colocation->id, 'role' => 'OWNER', 'join' => now()->subDays(10)]);
+        Membership::create(['user_id' => $member->id, 'colocation_id' => $colocation->id, 'role' => 'MEMBER', 'join' => now()->subDays(5)]);
+
+        // Admin bans member
+        $this->actingAs($admin)->post(route('admin.users.ban', $member));
+
+        $this->assertTrue($member->refresh()->is_banned);
+        $this->assertNotNull(Membership::where('user_id', $member->id)->first()->left);
+        $this->assertEquals('OWNER', Membership::where('user_id', $owner->id)->first()->role);
+        $this->assertEquals('ACTIVE', $colocation->refresh()->status);
     }
 }
