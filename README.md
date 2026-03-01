@@ -1,59 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 🏠 EasyColoc
 
-## About Laravel
+### _Redefining Shared Living through Collective Finance Management_
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+[![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel)](https://laravel.com)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php)](https://php.net)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+[**Live Presentation**](https://sahhoutiamine.github.io/easycoloc-Presentation/)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+**EasyColoc** is a premium, all-in-one platform designed to simplify the complexities of roomsharing (colocation). From tracking coffee expenses to calculating monthly rent settlements, it ensures that living together remains about the friendship, not the finances.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+</div>
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 📽️ Project Presentation
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+> [!IMPORTANT]
+> **View the official project presentation here:**
+> [🔗 Click to View Presentation](https://sahhoutiamine.github.io/easycoloc-Presentation/)
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## ✨ Key Features
 
-## Contributing
+### 👥 Colocation Management
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Smart Groups**: Create or join multiple colocations with a single account.
+- **Invitation System**: Securely invite new members via email tokens (powered by Mailtrap).
+- **Membership Tracking**: Automatic history of who joined when, ensuring fair expense splitting.
 
-## Code of Conduct
+### 💰 Financial Intelligence
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Collective Expenses**: Log expenses with categories (Rent, Food, Utilities) and clear timestamps.
+- **Settlement Algorithm**: A robust "Zero-Sum" logic that automatically calculates "who owes whom" the minimum number of transactions.
+- **Instant Balances**: Real-time visibility into your current standing within the group.
 
-## Security Vulnerabilities
+### 🛡️ Governance & Security
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **Reputation System**: Earn points for timely settlements and lose them for leaving debts behind.
+- **Admin Dashboard**: Comprehensive control for platform administrators to manage users, categories, and moderation.
+- **Role-Based Access**: Granular permissions for Owners, Members, and Admins.
 
-## License
+### 🔔 Smart Notifications
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **In-App Alerts**: Stay updated on new invitations, group changes, and settlement requests.
+
+---
+
+## 🛠️ Technical Stack
+
+- **Core Framework**: [Laravel 11](https://laravel.com/) (The PHP Framework for Web Artisans)
+- **Frontend Architecture**:
+    - **Blade Templates**: For powerful server-side rendering.
+    - **Tailwind CSS**: Utility-first styling for a sleek, modern UI.
+    - **Alpine.js**: Lightweight interactivity for modals and dropdowns.
+- **Development & Tooling**:
+    - **MySQL**: Relational database for complex financial relationships.
+    - **Vite**: Ultra-fast asset bundling and HMR.
+    - **Artisan**: Command-line interface for internal management.
+    - **Mailtrap**: SMTP testing for the invitation system.
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to get your local environment up and running.
+
+### Prerequisites
+
+- **PHP** >= 8.2
+- **Composer** (PHP Package manager)
+- **Node.js & NPM** (For frontend assets)
+- **MySQL/PostgreSQL**
+
+### Installation
+
+1. **Clone the repository**
+
+    ```bash
+    git clone https://github.com/sahhoutiamine/EasyColoc-Colocation-Management-Platform.git
+    cd EasyColoc
+    ```
+
+2. **Install dependencies**
+
+    ```bash
+    composer install
+    npm install
+    ```
+
+3. **Environment Setup**
+
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+    _Edit `.env` to configure your database and Mailtrap credentials._
+
+4. **Database & Assets**
+
+    ```bash
+    php artisan migrate --seed
+    npm run build
+    ```
+
+5. **Start the Server**
+    ```bash
+    php artisan serve
+    ```
+    Visit `http://localhost:8000` to see your app in action!
+
+---
+
+## 📖 Documentation
+
+For a deep dive into the architecture, database schema, and the balance algorithm, please refer to our technical documentation:
+
+- [Technical Documentation](docs/TECHNICAL_DOCUMENTATION.md)
+- [Project Overview](README.md) _(You are here)_
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions from the community!
+
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  Developed with ❤️ for better shared living.
+</div>
