@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\Colocation;
 use App\Models\Expense;
 use App\Models\Category;
+use App\Models\Membership;
+use App\Models\Settlement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,33 +92,71 @@ class AdminController extends Controller
         $user->update(['is_banned' => !$user->is_banned]);
 
         if ($user->is_banned) {
-            // Find active memberships where this user is OWNER
-            $ownedMemberships = \App\Models\Membership::where('user_id', $user->id)
-                ->where('role', 'OWNER')
+            // Find all active memberships
+            $activeMemberships = Membership::where('user_id', $user->id)
                 ->whereNull('left')
                 ->get();
 
-            foreach ($ownedMemberships as $membership) {
+            foreach ($activeMemberships as $membership) {
                 $colocation = $membership->colocation;
-                
-                // Find potential successor: earliest joining member who is not the banned user
-                $successor = \App\Models\Membership::where('colocation_id', $colocation->id)
-                    ->where('user_id', '!=', $user->id)
-                    ->whereNull('left')
-                    ->orderBy('join', 'asc')
-                    ->first();
 
-                if ($successor) {
-                    // Update successsor to OWNER
-                    $successor->update(['role' => 'OWNER']);
-                    // Downgrade banned user to MEMBER (optional, but cleaner for roles)
-                    $membership->update(['role' => 'MEMBER']);
+                if ($membership->role === 'OWNER') {
+                    // Try to find successor: earliest joining member who is not the banned user
+                    $successor = Membership::where('colocation_id', $colocation->id)
+                        ->where('user_id', '!=', $user->id)
+                        ->whereNull('left')
+                        ->orderBy('join', 'asc')
+                        ->first();
+
+                    if ($successor) {
+                        // Update successor to OWNER
+                        $successor->update(['role' => 'OWNER']);
+                    } else {
+                        // No successor found, cancel the colocation
+                        $colocation->update(['status' => 'CANCELLED']);
+                    }
                 }
+
+                // Kick the user from the colocation
+                $membership->update(['left' => now()]);
+
+                // Recalculate balances for the group
+                $colocation->recalculateBalances();
+
+                // Debt handling: If banned user has debt, transfer to owner (new or existing)
+                $debtAmount = Settlement::where('colocation_id', $colocation->id)
+                    ->where('from_user_id', $user->id)
+                    ->where('is_paid', false)
+                    ->sum('amount');
+
+                if ($debtAmount > 0.01) {
+                    $owner = Membership::where('colocation_id', $colocation->id)
+                        ->where('role', 'OWNER')
+                        ->whereNull('left')
+                        ->first();
+
+                    if ($owner && $owner->user_id !== $user->id) {
+                        Settlement::create([
+                            'colocation_id' => $colocation->id,
+                            'from_user_id' => $user->id,
+                            'to_user_id' => $owner->user_id,
+                            'amount' => $debtAmount,
+                            'is_paid' => true,
+                        ]);
+                    }
+                }
+
+                // Update user reputation based on debt
+                $user->increment('reputation', $debtAmount > 0.01 ? -1 : 1);
+
+                // Recalculate again to reflect the debt transfer
+                $colocation->recalculateBalances();
             }
         }
 
         $status = $user->is_banned ? 'banned' : 'unbanned';
+        $message = "User {$user->name} has been {$status}.";
 
-        return redirect()->back()->with('success', "User {$user->name} has been {$status}. Any owned colocations were transferred to housemates.");
+        return redirect()->back()->with('success', $message);
     }
 }
