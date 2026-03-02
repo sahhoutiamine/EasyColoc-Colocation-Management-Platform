@@ -31,10 +31,7 @@ class AdminController extends Controller
         $users = User::orderBy('created_at', 'desc')->paginate(10);
         $colocations = Colocation::with('memberships')->orderBy('created_at', 'desc')->take(5)->get();
         
-        // Data for category chart
-        $expensesByCategory = Category::withSum('expenses', 'amount')->get();
-
-        return view('admin.dashboard', compact('stats', 'users', 'colocations', 'expensesByCategory'));
+        return view('admin.dashboard', compact('stats', 'users', 'colocations'));
     }
 
     public function categories()
