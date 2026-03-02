@@ -43,30 +43,6 @@
         </div>
     </div>
 
-    <!-- Expenses Chart -->
-    <div class="glass-card animate-fade-in-delay-2" style="margin-bottom: 2rem;">
-        <div style="padding:1.5rem;border-bottom:1px solid var(--border);background:rgba(255,255,255,0.02);">
-            <h2 style="font-size:1.125rem;font-weight:700;color:var(--text-primary);">Expenses per Category</h2>
-        </div>
-        <div style="padding:1.5rem;">
-            <div style="display:flex; flex-direction:column; gap:1.25rem;">
-                @php $maxExpense = $expensesByCategory->max('expenses_sum_amount') ?: 1; @endphp
-                @foreach($expensesByCategory as $cat)
-                    <div style="display:flex; align-items:center; gap:1rem;">
-                        <div style="width:100px; font-size:0.875rem; color:var(--text-secondary); text-align:right;">
-                            {{ $cat->name }}
-                        </div>
-                        <div style="flex:1; height:12px; background:rgba(255,255,255,0.05); border-radius:999px; overflow:hidden; position:relative;">
-                            <div style="width:{{ ($cat->expenses_sum_amount / $maxExpense) * 100 }}%; height:100%; background:{{ $cat->color }}; border-radius:999px; transition:width 1s ease-out;"></div>
-                        </div>
-                        <div style="width:80px; font-size:0.875rem; font-weight:700; color:var(--text-primary);">
-                            {{ number_format($cat->expenses_sum_amount, 2) }} €
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    </div>
 
     <!-- User Management List -->
     <div class="glass-card animate-fade-in-delay-2" style="padding:0; overflow:hidden;">
